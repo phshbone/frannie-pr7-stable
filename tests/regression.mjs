@@ -37,6 +37,8 @@ assert.match(shared,/Manage connection & activity[\s\S]*care-cloud-actions/,"con
 assert.match(shared,/closeConnectionSetup\(\);setTimeout\(\(\)=>alert/,"connection errors release the dimming modal before showing an alert");
 assert.match(shared,/Create \/ replace recovery link/,"connected devices expose a reusable recovery-link control");
 assert.match(shared,/request\("\/v1\/recovery-links"/,"recovery links are created by the authenticated Worker endpoint");
+assert.match(shared,/if\(ownerDevice&&thisDeviceIds\.includes\(ownerDevice\)\)return true;[\s\S]*sameActor\(owner,userName\)/,"a paired replacement device with the same family name can end an inherited sitter session");
+assert.match(shared,/async function endSitterInstructions\(\)[\s\S]*active:false[\s\S]*sitterActiveIntent=false[\s\S]*await synchronize\(\)/,"ending sitter mode persists the inactive state and synchronizes it");
 
 const html=fs.readFileSync(new URL("index.html",root),"utf8");
 const sw=fs.readFileSync(new URL("sw.js",root),"utf8");
@@ -45,14 +47,15 @@ const css=fs.readFileSync(new URL("styles.css",root),"utf8");
 assert.match(app,/x\.type==="Medication"\)return x\.active===true\?\["Ongoing"[\s\S]*\["Ended"/,"medication status follows the explicit Current switch");
 assert.match(app,/class="entry-actions"/,"treatment edit and remove buttons have a dedicated action row");
 assert.match(app,/currentMedications=items\.filter[\s\S]*visible=\[\.\.\.currentMedications,\.\.\.otherTreatments\.slice\(0,1\)\]/,"all current medications remain visible above collapsed treatment history");
-for(const asset of ["styles.css?v=35","app.js?v=33","shared-care-core.js?v=17","shared-care.js?v=18"]){
+for(const asset of ["styles.css?v=36","app.js?v=33","shared-care-core.js?v=17","shared-care.js?v=19"]){
   assert.ok(html.includes(asset),`index references ${asset}`);assert.ok(sw.includes(asset),`service worker caches ${asset}`);
 }
 assert.match(sw,/frannie-pr7-stable-/,"service worker cache is isolated to the clean repository");
 assert.match(sw,/keys\.filter\(k=>k\.startsWith\(CACHE_PREFIX\)&&k!==CACHE_NAME\)/,"cache cleanup cannot delete another app's caches");
 assert.match(css,/html\{background:#1b1719\}/,"the iPhone area below the toolbar uses the toolbar color");
 assert.match(css,/body\{[\s\S]*?position:fixed;[\s\S]*?inset:0;/,"the PR7 body remains the viewport owner");
-assert.match(css,/\.app\{[\s\S]*?position:fixed !important;[\s\S]*?overflow-y:auto;/,"the PR7 content region remains the only scroller");
+assert.match(css,/\.app\{[\s\S]*?position:absolute !important;[\s\S]*?overflow-y:auto;/,"the content scroller is anchored inside the fixed viewport body without an iOS fixed layer");
+assert.doesNotMatch(css,/\.app\{[^}]*position:fixed/,"the scrolling content never uses iOS position fixed");
 assert.match(css,/\.bottom-nav\{[\s\S]*?position:absolute !important;/,"navigation is anchored to the fixed viewport body");
 assert.doesNotMatch(css,/\.bottom-nav\{[^}]*position:fixed/,"navigation never uses iOS position fixed");
 assert.doesNotMatch(html,/class="app-shell"/,"the later PR8 structural app-shell rewrite is not present");
@@ -80,4 +83,4 @@ assert.doesNotMatch(training,/document\.body\.style\.overflow/,"training video l
 assert.ok(html.includes("frannies-training-update.js?v=2"),"index loads restored training interface v2");
 assert.ok(sw.includes("frannies-training-update.js?v=2"),"service worker caches restored training interface v2");
 
-console.log("PASS: 50 Frannie PR7 state, sync, pairing, recovery, sitter, audit, isolated cache, absolute navigation, complete assets, training UI, and care UI regression assertions");
+console.log("PASS: 52 Frannie PR7 state, sync, pairing, recovery, sitter handoff/end, audit, isolated cache, absolute content/navigation, complete assets, training UI, and care UI regression assertions");
