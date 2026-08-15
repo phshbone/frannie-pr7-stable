@@ -1,0 +1,24 @@
+FRANNIE BTR v2.2 — REPLACEMENT PACKAGE
+
+REPLACE:
+- index.html
+- app.js
+- styles.css
+- sw.js
+- shared-care-core.js
+- shared-care.js
+
+BUILD:
+- visible stamp: BTR-v2.2 · cache v34
+- app.js v30
+- styles.css v30
+- shared-care-core.js v14
+- shared-care.js v14
+
+DO NOT CHANGE:
+- Cloudflare Worker/D1 deployment
+- manifest.json
+- assets
+- training-update script
+
+Read BTR-V2.2-REPORT.txt for the exact repair and test sequence.
