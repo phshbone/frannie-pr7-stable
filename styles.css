@@ -187,12 +187,12 @@ body{
   inset:0;
 }
 .app{
-  position:fixed !important;
+  position:absolute !important;
   inset:0 0 0 0;
   width:100%;
   max-width:none;
-  height:100dvh;
-  min-height:100dvh;
+  height:auto;
+  min-height:0;
   overflow-y:auto;
   overflow-x:hidden;
   -webkit-overflow-scrolling:auto;
@@ -223,11 +223,6 @@ body{
   position:fixed !important;
   inset:0 !important;
 }
-@supports not (height:100dvh){
-  .app{height:100vh;min-height:100vh}
-}
-
-
 /* Safari-only installation curtain. The app itself is not rendered in browser mode. */
 .install-curtain{display:none}
 html.install-required body{

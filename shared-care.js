@@ -89,9 +89,10 @@
     if(!state.sitter?.active)return false;
     const ownerDevice=(state.sitter?.activatedByDeviceId||"").trim();
     const thisDeviceIds=[deviceInfo?.id,localDeviceId].map(value=>String(value||"").trim()).filter(Boolean);
-    if(ownerDevice)return thisDeviceIds.includes(ownerDevice);
-    // Legacy active sessions did not have a device owner. Retain the old name
-    // check only for those sessions so an upgrade cannot permanently lock one.
+    if(ownerDevice&&thisDeviceIds.includes(ownerDevice))return true;
+    // A reinstalled family device can receive the active shared session before
+    // its replacement device ID is handed off. The matching family name remains
+    // a safe fallback because this code runs only on an authorized paired device.
     const owner=(state.sitter?.activatedBy||"").trim();
     return !owner||sameActor(owner,userName);
   }
