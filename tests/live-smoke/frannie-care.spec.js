@@ -26,6 +26,10 @@ async function openApp(page) {
   await expect(page.getByRole('heading', { name: /Frannie’s profile/i })).toBeVisible();
 }
 
+async function openBottomNav(page, name) {
+  await page.locator('.bottom-nav').getByRole('button', { name, exact: true }).click();
+}
+
 function collectBrowserFailures(page) {
   const browserErrors = [];
   const requestFailures = [];
@@ -47,11 +51,11 @@ test('startup and primary navigation work', async ({ page }, testInfo) => {
   await expect(page.getByRole('heading', { name: 'Frannie Care' })).toBeVisible();
   await verificationShot(page, testInfo, 'care');
 
-  await page.locator("button[onclick=\"showScreen('log')\"]").first().click();
+  await openBottomNav(page, 'Frannie Log');
   await expect(page.getByRole('heading', { name: 'Frannie Log' })).toBeVisible();
   await verificationShot(page, testInfo, 'log');
 
-  await page.locator("button[onclick=\"showScreen('home')\"]").first().click();
+  await openBottomNav(page, 'Home');
   await expect(page.getByRole('heading', { name: /Frannie’s profile/i })).toBeVisible();
 
   expect(failures.browserErrors, `Uncaught browser errors: ${failures.browserErrors.join('\n')}`).toEqual([]);
@@ -108,7 +112,7 @@ test('Frannie Log quick note persists across reload', async ({ page }, testInfo)
   const failures = collectBrowserFailures(page);
   await openApp(page);
 
-  await page.locator("button[onclick=\"showScreen('log')\"]").first().click();
+  await openBottomNav(page, 'Frannie Log');
   await expect(page.getByRole('heading', { name: 'Frannie Log' })).toBeVisible();
 
   const stamp = Date.now().toString().slice(-6);
@@ -122,7 +126,7 @@ test('Frannie Log quick note persists across reload', async ({ page }, testInfo)
 
   await page.reload({ waitUntil: 'domcontentloaded' });
   await dismissSplash(page);
-  await page.locator("button[onclick=\"showScreen('log')\"]").first().click();
+  await openBottomNav(page, 'Frannie Log');
   await page.getByText('Frannie Log history').click();
   await expect(page.locator('#mainLogList')).toContainText(title);
   await expect(page.locator('#mainLogList')).toContainText(note);
