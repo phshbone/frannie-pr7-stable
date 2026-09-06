@@ -21,7 +21,7 @@ async function dismissSplash(page) {
 }
 
 async function openApp(page) {
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.goto('./', { waitUntil: 'domcontentloaded' });
   await expect(page).toHaveTitle(/frannie/i);
   await dismissSplash(page);
   await expect(page.getByRole('heading', { name: /Frannie’s profile/i })).toBeVisible();
