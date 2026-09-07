@@ -23,7 +23,7 @@ jobs:
   live-smoke:
     runs-on: ubuntu-latest
     env:
-      LIVE_SMOKE_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'deployed' }}
+      LIVE_SMOKE_MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'local' }}
       DEFAULT_LIVE_BASE_URL: https://phshbone.github.io/frannie-pr7-stable/
       INPUT_LIVE_BASE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.live_base_url || '' }}
       LOCAL_BASE_URL: http://127.0.0.1:4173
